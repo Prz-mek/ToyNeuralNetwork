@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Neural Networks</title>
+
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+</head>
+
+<body>
+    <header>
+        <h2>Sieć neuronowa rozpoznająca cyfry</h2>
+    </header>
+
+    <article>
+        <div id="container">
+            <div id="input">
+                <canvas id="drawing"></canvas>
+                <div id="input__buttons">
+                    <button id="check" class="button">ROZPOZNAJ</button>
+                    <button id="erase" class="button">WYCZYŚĆ</button>
+                </div>
+            </div>
+
+            <div id="neural">
+                <canvas id="graph"></canvas>
+            </div>
+            <div id="output">
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+    </article>
+
+    <script src="{{url_for('static', filename='model.js')}}"></script>
+    <script src="{{url_for('static', filename='view.js')}}"></script>
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+</body>
+
+</html>
