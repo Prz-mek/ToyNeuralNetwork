@@ -14,15 +14,18 @@ const getHeight = () => document.getElementById('neural').offsetHeight;
 
 let net;
 let netView;
+let chart = new Chart(10, () => 0.8 * getWidth(), () => 300);
 
 const setCanvNetDimensions = () => {
-    canvNet.width = canvChart.width = getWidth();
+    canvNet.width = getWidth();
     canvNet.height = getHeight();
+    canvChart.width = 0.8 * getWidth();
     canvChart.height = 300;
 };
 
 const paint = () => {
     netView.paint(ctx1);
+    chart.show(ctx3);
 };
 
 window.addEventListener('resize', () => {
@@ -82,7 +85,6 @@ document.getElementById('check').onclick = () => {
     let input = Matrix.fromValues(64, 1, normalize(...dataForNetScaled));
     let result = net.predict(input);
     netView.update(ctx1);
-    let chart = new Chart(10, getWidth, () => 300);
     chart.paint(ctx3, percentage(...result.values));
 }
 

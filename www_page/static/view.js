@@ -8,19 +8,19 @@ class NetworkView {
     }
 
     countPositions() {
-        let marginX = this.margin * this.width();
-        let marginY = this.margin * this.height();
-        let width = this.width() - 2 * marginX;
-        let height = this.height() - 2 * marginY;
+        let margin = this.margin * Math.min(this.width(), this.height());
+        let width = this.width() - 2 * margin;
+        let height = this.height() - 2 * margin;
         let layersCount = this.activations.map(x => x.rows);
         let gapX = width / (layersCount.length - 1);
         let gapY = height / Math.max(...layersCount);
+        this.r = Math.min(gapX, gapY, margin) / 2.5;
         let positions = [];
         for (let i = 0; i < layersCount.length; i++) {
-            let x = marginX + i * gapX;
+            let x = margin + i * gapX;
             positions.push([x])
             for (let j = 0; j < layersCount[i]; j++) {
-                let y = marginY + height / 2 - (layersCount[i] - 1) / 2 * gapY + j * gapY;
+                let y = margin + height / 2 - (layersCount[i] - 1) / 2 * gapY + j * gapY;
                 positions[i].push(y);
             }
         }
@@ -45,25 +45,23 @@ class NetworkView {
             }
         }
 
-        let r = 10;
         for (let i = 0; i < this.positions.length; i++) {
             let x = this.positions[i][0];
             let layerActivationNormalized = normalize(...this.activations[i].values);
             for (let j = 1; j < this.positions[i].length; j++) {
                 let y = this.positions[i][j];
-                paintPerceptron(ctx, x, y, r, layerActivationNormalized[j - 1]);
+                paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[j - 1]);
             }
         }
     }
 
     update(ctx) {
-        let r = 10;
         for (let i = 0; i < this.positions.length; i++) {
             let x = this.positions[i][0];
             let layerActivationNormalized = normalize(...this.activations[i].values);
             for (let j = 1; j < this.positions[i].length; j++) {
                 let y = this.positions[i][j];
-                paintPerceptron(ctx, x, y, r, layerActivationNormalized[j - 1]);
+                paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[j - 1]);
             }
         }
     }
@@ -89,6 +87,26 @@ class Chart {
         this.classesNum = classesNum;
         this.width = width;
         this.height = height;
+    }
+
+    show(ctx) {
+        let colWidth = 2 * this.width() / (3 * this.classesNum + 1);
+        let gap = colWidth / 2;
+        ctx.clearRect(0, 0, this.width(), this.height());
+        for (let k = 0; k <= 1; k += 0.2) {
+            let y = k * this.height();
+            ctx.strokeStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(this.width(), y);
+            ctx.stroke();
+        }
+
+        for (let i = 0; i < this.classesNum; i++) {
+            ctx.fillStyle = 'white';
+            ctx.font = `${gap}px serif`;
+            ctx.fillText(`${i}`, 1.7 * gap + i * (colWidth + gap), this.height(), gap)
+        }
     }
 
     paint(ctx, data) {
