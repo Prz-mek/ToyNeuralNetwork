@@ -7,19 +7,21 @@ canvDraw.width = 240;
 canvDraw.height = 240;
 
 const canvChart = document.getElementById('chart');
+
 const ctx3 = canvChart.getContext('2d');
 
-const getWidth = () => document.getElementById('neural').offsetWidth;
+const getWidthNeural = () => document.getElementById('neural').offsetWidth;
+const getWidthOutput = () => document.getElementById('output').offsetWidth;
 const getHeight = () => document.getElementById('neural').offsetHeight;
 
 let net;
 let netView;
-let chart = new Chart(10, () => 0.8 * getWidth(), () => 300);
+let chart = new Chart(10, () => 0.8 * getWidthOutput(), () => 300);
 
 const setCanvNetDimensions = () => {
-    canvNet.width = getWidth();
+    canvNet.width = getWidthNeural();
     canvNet.height = getHeight();
-    canvChart.width = 0.8 * getWidth();
+    canvChart.width = 0.8 * getWidthOutput();
     canvChart.height = 300;
 };
 
@@ -106,7 +108,7 @@ const getModel = async () => {
 const init = async () => {
     const data = await getModel();
     net = NeuralNetwork.encodeFromJSON(data);
-    netView = new NetworkView(net.layers, getWidth, getHeight, 0.05);
+    netView = new NetworkView(net.layers, getWidthNeural, getHeight, 0.05);
     setCanvNetDimensions();
     paint();
 };

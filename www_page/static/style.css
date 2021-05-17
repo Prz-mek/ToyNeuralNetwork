@@ -15,13 +15,67 @@ body {
     color: var(--light);
 }
 
+.container {
+    width: 100vw;
+    height: 1800px;
+    display: grid;
+    grid-template-rows: 0.2fr 2fr 0.4fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+        "header header header header"
+        "input neural neural output"
+        "footer footer footer footer";
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        height: 1800px;
+        grid-template-rows: 0.2fr 1fr 2fr 1fr 0.4fr;
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "input"
+            "neural"
+            "output"
+            "footer";
+    }
+}
+
 header {
+    grid-area: header;
     text-align: center;
-    padding: 20px;
+    padding: 10px;
 }
 
 header > h2 {
     font-size: 50px;
+}
+
+#input, #output {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#input {
+    grid-area: input;
+}
+
+#neural {
+    grid-area: neural;
+}
+
+#graph {
+    position: absolute;
+}
+
+#output {
+    grid-area: output;
+}
+
+#drawing {
+    background-color: white;
 }
 
 .button {
@@ -34,25 +88,10 @@ header > h2 {
     cursor: pointer;
 }
 
-#container {
-    width: 100%;
-    height: 1800px;
-    display: grid;
-    grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-}
-
-#input, #output {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
-
 #input__buttons {
     padding: 10px;
 }
 
-#drawing {
-    background-color: white;
+footer {
+    grid-area: footer;
 }

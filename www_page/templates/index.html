@@ -12,28 +12,27 @@
 </head>
 
 <body>
-    <header>
-        <h2>Sieć neuronowa rozpoznająca cyfry</h2>
-    </header>
-
-    <article>
-        <div id="container">
-            <div id="input">
-                <canvas id="drawing"></canvas>
-                <div id="input__buttons">
-                    <button id="check" class="button">ROZPOZNAJ</button>
-                    <button id="erase" class="button">WYCZYŚĆ</button>
-                </div>
-            </div>
-
-            <div id="neural">
-                <canvas id="graph"></canvas>
-            </div>
-            <div id="output">
-                <canvas id="chart"></canvas>
+    <div class="container">
+        <header>
+            <h2>Sieć neuronowa rozpoznająca cyfry</h2>
+        </header>
+        <div id="input">
+            <canvas id="drawing"></canvas>
+            <div id="input__buttons">
+                <button id="check" class="button">ROZPOZNAJ</button>
+                <button id="erase" class="button">WYCZYŚĆ</button>
             </div>
         </div>
-    </article>
+
+        <div id="neural">
+            <canvas id="graph"></canvas>
+        </div>
+        
+        <div id="output">
+            <canvas id="chart"></canvas>
+        </div>
+        <footer>blah blah</footer>
+    </div>
 
     <script src="{{url_for('static', filename='model.js')}}"></script>
     <script src="{{url_for('static', filename='view.js')}}"></script>

@@ -67,7 +67,7 @@ class NetworkView {
     }
 }
 
-const paintPerceptron = (ctx, x, y, r, activation, m = 2) => {
+const paintPerceptron = (ctx, x, y, r, activation, m = 1) => {
     if (m !== 0) {
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2, true);
