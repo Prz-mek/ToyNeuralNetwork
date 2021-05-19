@@ -26,8 +26,9 @@ const setCanvNetDimensions = () => {
 };
 
 const paint = () => {
+    netView.countPositions();
     netView.paint(ctx1);
-    chart.show(ctx3);
+    chart.paint(ctx3);
 };
 
 window.addEventListener('resize', () => {
@@ -86,15 +87,15 @@ document.getElementById('check').onclick = () => {
 
     let input = Matrix.fromValues(64, 1, normalize(...dataForNetScaled));
     let result = net.predict(input);
-    netView.update(ctx1);
-    chart.paint(ctx3, percentage(...result.values));
+    netView.paint(ctx1);
+    chart.setPlot(percentage(...result.values))
+    chart.paint(ctx3);
 }
 
 document.getElementById('erase').onclick = () => {
     ctx2.clearRect(0, 0, canvDraw.width, canvDraw.height);
 }
 
-// geting neural network data
 const getModel = async () => {
     try {
         const res = await fetch(`${window.location}/model`);
@@ -108,7 +109,11 @@ const getModel = async () => {
 const init = async () => {
     const data = await getModel();
     net = NeuralNetwork.encodeFromJSON(data);
-    netView = new NetworkView(net.layers, getWidthNeural, getHeight, 0.05);
+    weights = [];
+    net.weights.forEach(element => {
+        weights.push(element.normalize());
+    });
+    netView = new NetworkView(net.layers, weights, getWidthNeural, getHeight, 0.05);
     setCanvNetDimensions();
     paint();
 };

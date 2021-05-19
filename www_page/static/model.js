@@ -52,6 +52,14 @@ class Matrix {
         return mat;
     }
 
+    get(row, col) {
+        if (0 <= row && row < this.rows && 0 <= col && col < this.cols) {
+            return this.values[row * this.cols + col];
+        } else {
+             console.error('Out of mateix. ' + row + ' ' + col + ' ' + this.rows + ' ' + this.cols);
+        }
+    }
+
     map(f) {
         this.values = this.values.map(f);
     }
@@ -87,6 +95,37 @@ class Matrix {
             console.log('Arguments must be a instance of Matrix.');
         }
     }
+
+    static multiplyByVector(a, v, axis = 0) {
+        let mat = new Matrix(a.rows, a.cols);
+        if (axis === 0) {
+            if (a.rows === v.rows) {
+                for (let i = 0; i < a.cols; i++) {
+                    for (let j = 0; j < a.rows; j++) {
+                        mat.values[i * mat.cols + j] = a.values[i * mat.cols + j] * v.values[i];
+                    }
+                }
+            } else {
+                console.log("error");
+            }
+        } else if (axis === 1) {
+            if (a.cols === v.rows) {
+                for (let i = 0; i < a.cols; i++) {
+                    for (let j = 0; j < a.rows; j++) {
+                        mat.values[j * mat.cols + i] = a.values[j * mat.cols + i] * v.values[i];
+                    }
+                }
+            } else {
+                console.log("error");
+            }
+        }
+        return mat;
+    }
+
+    normalize() {
+        let normalizedValues = normalize(...this.values);
+        return Matrix.fromValues(this.rows, this.cols, normalizedValues);
+    }
 }
 
 class NeuralNetwork {
@@ -113,7 +152,7 @@ class NeuralNetwork {
         });
         let activations = [];
         obj.activations.forEach(element => {
-            switch(element) {
+            switch (element) {
                 case 'tanh':
                     activations.push(tanh);
                     break;
@@ -139,7 +178,7 @@ class NeuralNetwork {
                     temp.map(this.activations[i]);
                     this.layers[i + 1] = temp;
                 }
-
+                
                 return temp;
             } else {
                 console.log('Input have incorect size.');

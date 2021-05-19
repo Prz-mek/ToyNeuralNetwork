@@ -32,7 +32,7 @@ class Dense:
     def encode_activation(self):
         pass
 
-# Activation fuction: hyperbolic tangent
+# Activation fuction: hyperbolic tangent, extends Dense
 class Tanh(Dense):
     def __init__(self, input_size, output_size):
         tanh = lambda x: np.tanh(x)

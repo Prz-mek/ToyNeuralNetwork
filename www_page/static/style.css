@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-    width: 100vw;
+    width: 100%;
     height: 1800px;
     display: grid;
     grid-template-rows: 0.2fr 2fr 0.4fr;
@@ -27,7 +27,7 @@ body {
         "footer footer footer footer";
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
     .container {
         height: 1800px;
         grid-template-rows: 0.2fr 1fr 2fr 1fr 0.4fr;
