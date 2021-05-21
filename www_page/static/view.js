@@ -13,6 +13,77 @@ const paintPerceptron = (ctx, x, y, r, activation, m = 1) => {
     ctx.fill();
 };
 
+class Input {
+    
+    constructor(ctx, width, height) {
+        this.drawing = false;
+        this.ctx = ctx;
+        this.width = width;
+        this.height = height;
+    }
+
+    draw(e) {
+        if (!this.drawing) return;
+
+        let rect = canvDraw.getBoundingClientRect();
+
+        this.ctx.lineWidth = 17;
+        this.ctx.lineCap = 'round';
+
+        this.ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    mouseDownPaint(e) {
+        this.drawing = true;
+        this.draw(e);
+    }
+
+    mouseUpPaint() {
+        this.drawing = false;
+        this.ctx.beginPath();
+    }
+
+    predict(netView, ctxNet, ctxChart) {
+        let drawing = this.ctx.getImageData(0, 0, canvDraw.width, canvDraw.height);
+
+        const data = drawing.data;
+        let dataForNet = [];
+        for (let i = 3; i < data.length; i += 4) {
+            dataForNet.push(data[i]);
+        }
+
+        let scale = 30;
+        let sideSmall = 8;
+        let sideBig = 240;
+        let dataForNetScaled = [];
+        for (let i = 0; i < sideSmall; i++) {
+            for (let j = 0; j < sideSmall; j++) {
+                let values = [];
+                for (let k = 0; k < scale; k++) {
+                    for (let l = 0; l < scale; l++) {
+                        values.push(dataForNet[(i * scale + k) * sideBig + j * scale + l]);
+                    }
+                }
+
+                dataForNetScaled.push(avg(...values));
+            }
+        }
+
+        let input = Matrix.fromValues(64, 1, normalize(...dataForNetScaled));
+        let result = net.predict(input);
+        netView.paint(ctxNet);
+        chart.setPlot(percentage(...result.values))
+        chart.paint(ctxChart);
+    }
+
+    clear() {
+        this.ctx.clearRect(0, 0, this.width(), this.height());
+    }
+}
+
 class NetworkView {
     constructor(activations, weights, width, height, margin) {
         this.activations = activations;
