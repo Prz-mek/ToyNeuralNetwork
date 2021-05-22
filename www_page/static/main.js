@@ -3,8 +3,6 @@ const ctxNet = canvNet.getContext('2d');
 
 const canvDraw = document.getElementById('drawing');
 const ctxDraw = canvDraw.getContext('2d');
-canvDraw.width = 240;
-canvDraw.height = 240;
 
 const canvChart = document.getElementById('chart');
 const ctxChart = canvChart.getContext('2d');
@@ -13,13 +11,14 @@ const getWidthNeural = () => document.getElementById('neural').offsetWidth;
 const getWidthOutput = () => 0.8 * document.getElementById('output').offsetWidth;
 const getHeight = () => document.getElementById('neural').offsetHeight;
 
+const input = new Input(ctxDraw, () => 240, () => 240);
 let net;
-let netView;
 const chart = new Chart(10, () => getWidthOutput(), () => 300);
-const input  = new Input(ctxDraw, () => 240, () => 240);
 
 // setting canvas size
 const setCanvNetDimensions = () => {
+    canvDraw.width = 240;
+    canvDraw.height = 240;
     canvNet.width = getWidthNeural();
     canvNet.height = getHeight();
     canvChart.width = getWidthOutput();
@@ -28,8 +27,8 @@ const setCanvNetDimensions = () => {
 
 // painting on load and resize
 const paint = () => {
-    netView.countPositions();
-    netView.paint(ctxNet);
+    net.countPositions();
+    net.paint(ctxNet);
     chart.paint(ctxChart);
 };
 
@@ -39,19 +38,16 @@ const getModel = async () => {
         const res = await fetch(`${window.location}/model`);
         const data = await res.json();
         return data;
-    } catch(e) {
+    } catch (e) {
         console.log(e);
     }
 };
 
 const init = async () => {
     const data = await getModel();
-    net = NeuralNetwork.encodeFromJSON(data);
+    let netModel = NeuralNetwork.encodeFromJSON(data);
     weights = [];
-    net.weights.forEach(element => {
-        weights.push(element.normalize());
-    });
-    netView = new NetworkView(net.layers, weights, getWidthNeural, getHeight, 0.05);
+    net = new NetworkView(netModel, getWidthNeural, getHeight, 0.05);
     setCanvNetDimensions();
     paint();
 };
@@ -66,5 +62,5 @@ canvDraw.addEventListener('mousedown', e => input.mouseDownPaint(e));
 canvDraw.addEventListener('mouseup', () => input.mouseUpPaint());
 canvDraw.addEventListener('mousemove', e => input.draw(e));
 
-document.getElementById('check').onclick = () => input.predict(netView, ctxNet, ctxChart);
+document.getElementById('check').onclick = () => input.predict(net, ctxNet, ctxChart);
 document.getElementById('erase').onclick = () => input.clear();

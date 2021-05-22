@@ -13,8 +13,17 @@ const paintPerceptron = (ctx, x, y, r, activation, m = 1) => {
     ctx.fill();
 };
 
+const paintEdge = (ctx, x1, y1, x2, y2, activation) => {
+    let color = 255 * activation;
+    ctx.strokeStyle = `rgb(${color}, ${color}, ${color})`;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+};
+
 class Input {
-    
+
     constructor(ctx, width, height) {
         this.drawing = false;
         this.ctx = ctx;
@@ -46,7 +55,7 @@ class Input {
         this.ctx.beginPath();
     }
 
-    predict(netView, ctxNet, ctxChart) {
+    predict(net, ctxNet, ctxChart) {
         let drawing = this.ctx.getImageData(0, 0, canvDraw.width, canvDraw.height);
 
         const data = drawing.data;
@@ -73,8 +82,7 @@ class Input {
         }
 
         let input = Matrix.fromValues(64, 1, normalize(...dataForNetScaled));
-        let result = net.predict(input);
-        netView.paint(ctxNet);
+        let result = net.predict(ctxNet, input);
         chart.setPlot(percentage(...result.values))
         chart.paint(ctxChart);
     }
@@ -85,9 +93,10 @@ class Input {
 }
 
 class NetworkView {
-    constructor(activations, weights, width, height, margin) {
-        this.activations = activations;
-        this.weights = weights;
+    constructor(model, width, height, margin) {
+        this.model = model;
+        this.activations = model.layers;
+        this.weights = model.weights;
         this.width = width;
         this.height = height;
         this.margin = margin;
@@ -114,10 +123,16 @@ class NetworkView {
         this.positions = positions;
     }
 
+    predict(ctx, input) {
+        let output = this.model.predict(input);
+        this.paint(ctx);
+        return output;
+    }
+
     paint(ctx) {
         ctx.clearRect(0, 0, this.width(), this.height());
         for (let i = 1; i < this.positions.length; i++) {
-            let activatedWeights = Matrix.multiplyByVector(this.weights[i - 1], this.activations[i - 1], 1);
+            let activatedWeights = Matrix.multiplyByVector(this.model.weights[i - 1], this.activations[i - 1], 1);
             activatedWeights = activatedWeights.normalize();
             let x1 = this.positions[i - 1][0]
             let x2 = this.positions[i][0];
@@ -125,19 +140,15 @@ class NetworkView {
                 let y2 = this.positions[i][j];
                 for (let k = 1; k < this.positions[i - 1].length; k++) {
                     let y1 = this.positions[i - 1][k];
-                    let color = 255 * activatedWeights.get(j - 1, k - 1);
-                    ctx.strokeStyle = `rgb(${color}, ${color}, ${color})`;
-                    ctx.beginPath();
-                    ctx.moveTo(x2, y2);
-                    ctx.lineTo(x1, y1);
-                    ctx.stroke();
+                    let activation = activatedWeights.get(j - 1, k - 1);
+                    paintEdge(ctx, x1, y1, x2, y2, activation);
                 }
             }
         }
 
         for (let i = 0; i < this.positions.length; i++) {
             let x = this.positions[i][0];
-            let layerActivationNormalized = normalize(...this.activations[i].values);
+            let layerActivationNormalized = normalize(...this.model.layers[i].values);
             for (let j = 1; j < this.positions[i].length; j++) {
                 let y = this.positions[i][j];
                 paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[j - 1]);
