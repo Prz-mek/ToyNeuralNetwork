@@ -12,7 +12,10 @@ class NeuralNetwork:
         self.layers = layers
     
     def predict(x):
-        pass
+        output = x
+        for layer in self.layers:
+                output = layer.forward(output)
+        return np.argmax(output)
 
     def train(self, x_train, y_train, epochs=10, learning_rate=0.01):
         n = x_train.shape[0]

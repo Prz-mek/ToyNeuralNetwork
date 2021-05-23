@@ -36,9 +36,6 @@ net = NeuralNetwork([
 # train
 net.train(x_train, y_train, learning_rate=0.2, epochs = 700)
 
-# best result accuracy: 92%
-# l_r = 0.3, e = 300, (64, 16, 16, 10, tanh)
-
 # test
 print('Accuracy in test set: ', net.get_accuracy(x_test, y_test))
 
