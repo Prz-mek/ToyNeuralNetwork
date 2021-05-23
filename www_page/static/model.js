@@ -14,10 +14,10 @@ const normalize = (...args) => {
     let max = Math.max(...args);
     let min = Math.min(...args);
     let delta = max - min;
-    if (max > 0) {
+    if (delta > 0) {
         return args.map(x => (x - min) / delta);
     } else {
-        return args;
+        return new Array(args.length).fill(0);
     }
 }
 

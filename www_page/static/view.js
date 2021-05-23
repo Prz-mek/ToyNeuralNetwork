@@ -133,6 +133,7 @@ class NetworkView {
         ctx.clearRect(0, 0, this.width(), this.height());
         for (let i = 1; i < this.positions.length; i++) {
             let activatedWeights = Matrix.multiplyByVector(this.model.weights[i - 1], this.activations[i - 1], 1);
+            activatedWeights.map(sigmoid);
             activatedWeights = activatedWeights.normalize();
             let x1 = this.positions[i - 1][0]
             let x2 = this.positions[i][0];
@@ -141,7 +142,20 @@ class NetworkView {
                 for (let k = 1; k < this.positions[i - 1].length; k++) {
                     let y1 = this.positions[i - 1][k];
                     let activation = activatedWeights.get(j - 1, k - 1);
-                    paintEdge(ctx, x1, y1, x2, y2, activation);
+                    if (0.4 < activation || activation < 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+            }
+
+            for (let j = 1; j < this.positions[i].length; j++) {
+                let y2 = this.positions[i][j];
+                for (let k = 1; k < this.positions[i - 1].length; k++) {
+                    let y1 = this.positions[i - 1][k];
+                    let activation = activatedWeights.get(j - 1, k - 1);
+                    if (activation <= 0.4 || 0.7 <= activation) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
                 }
             }
         }
