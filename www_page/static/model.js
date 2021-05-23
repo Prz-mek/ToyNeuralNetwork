@@ -33,11 +33,7 @@ class Matrix {
     constructor(rows, cols) {
         this.rows = rows;
         this.cols = cols;
-        let n = rows * cols;
-        this.values = [];
-        for (let i = 0; i < n; i++) {
-            this.values[i] = 0;
-        }
+        this.values = new Array(rows * cols).fill(0);
     }
 
     static fromValues(rows, cols, values) {

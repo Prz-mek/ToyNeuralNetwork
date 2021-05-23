@@ -11,7 +11,7 @@ const getWidthNeural = () => document.getElementById('neural').offsetWidth;
 const getWidthOutput = () => 0.8 * document.getElementById('output').offsetWidth;
 const getHeight = () => document.getElementById('neural').offsetHeight;
 
-const input = new Input(ctxDraw, () => 240, () => 240);
+const sheet = new Sheet(ctxDraw, () => 240, () => 240);
 let net;
 const chart = new Chart(10, () => getWidthOutput(), () => 300);
 
@@ -58,9 +58,9 @@ window.addEventListener('resize', () => {
     paint();
 });
 
-canvDraw.addEventListener('mousedown', e => input.mouseDownPaint(e));
-canvDraw.addEventListener('mouseup', () => input.mouseUpPaint());
-canvDraw.addEventListener('mousemove', e => input.draw(e));
+canvDraw.addEventListener('mousedown', e => sheet.mouseDownPaint(e));
+canvDraw.addEventListener('mouseup', () => sheet.mouseUpPaint());
+canvDraw.addEventListener('mousemove', e => sheet.draw(e));
 
-document.getElementById('check').onclick = () => input.predict(net, ctxNet, ctxChart);
-document.getElementById('erase').onclick = () => input.clear();
+document.getElementById('check').onclick = () => sheet.predict(net, ctxNet, ctxChart);
+document.getElementById('erase').onclick = () => sheet.clear();

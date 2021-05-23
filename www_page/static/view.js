@@ -22,7 +22,7 @@ const paintEdge = (ctx, x1, y1, x2, y2, activation) => {
     ctx.stroke();
 };
 
-class Input {
+class Sheet {
 
     constructor(ctx, width, height) {
         this.drawing = false;
@@ -176,7 +176,7 @@ class Chart {
         this.classesNum = classesNum;
         this.width = width;
         this.height = height;
-        this.plot = Array(classesNum).fill(0);
+        this.plot = new Array(classesNum).fill(0);
     }
 
     setPlot(plot) {
