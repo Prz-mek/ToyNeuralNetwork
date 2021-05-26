@@ -17,8 +17,6 @@ const chart = new Chart(10, () => getWidthOutput(), () => 300);
 
 // setting canvas size
 const setCanvNetDimensions = () => {
-    canvDraw.width = 240;
-    canvDraw.height = 240;
     canvNet.width = getWidthNeural();
     canvNet.height = getHeight();
     canvChart.width = getWidthOutput();
@@ -48,6 +46,8 @@ const init = async () => {
     let netModel = NeuralNetwork.encodeFromJSON(data);
     weights = [];
     net = new NetworkView(netModel, getWidthNeural, getHeight, 0.05);
+    canvDraw.width = 240;
+    canvDraw.height = 240;
     setCanvNetDimensions();
     paint();
 };
