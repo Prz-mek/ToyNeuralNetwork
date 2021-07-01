@@ -41,3 +41,13 @@ class Tanh(Dense):
     
     def encode_activation(self):
         return "tanh"
+
+# Activation fuction: sigmoid, extends Dense
+class Sigmoid(Dense):
+    def __init__(self, input_size, output_size):
+        sigmoid = lambda x: np.where(x >= 0, 1 / (1 + np.exp(-x)), np.exp(x) / (1 + np.exp(x)))
+        sigmoid_derivative = lambda x: sigmoid(x) * (1 - sigmoid(x))
+        super().__init__(input_size, output_size, sigmoid, sigmoid_derivative)
+
+    def encode_activation(self):
+        return "sigmoid"

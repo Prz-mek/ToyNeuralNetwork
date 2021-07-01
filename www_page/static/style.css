@@ -19,10 +19,11 @@ body {
     width: 100%;
     height: 1800px;
     display: grid;
-    grid-template-rows: 0.2fr 2fr 0.2fr;
+    grid-template-rows: 0.2fr 0.2fr 2fr 0.2fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-areas: 
         "header header header header"
+        "chose chose chose chose"
         "input neural neural output"
         "footer footer footer footer";
 }
@@ -30,10 +31,11 @@ body {
 @media screen and (max-width: 1200px) {
     .container {
         height: 2200px;
-        grid-template-rows: 0.2fr 1fr 2fr 1fr 0.2fr;
+        grid-template-rows: 0.2fr 0.2fr 1fr 2fr 1fr 0.2fr;
         grid-template-columns: 1fr;
         grid-template-areas: 
             "header"
+            "chose"
             "input"
             "neural"
             "output"
@@ -50,6 +52,14 @@ header {
 
 header > h1 {
     font-size: 50px;
+}
+
+#choose__model {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    grid-area: chose;
 }
 
 #input, #output {
@@ -79,12 +89,33 @@ header > h1 {
     background-color: white;
 }
 
-.button {
+.model__button {
+    width: 100px;
+    background-color: var(--light);
+    border-style: none;
+    border-radius: 20px;
+    color: var(--dark);
+    font-size: 14px;
+    padding: 10px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin: 30px;
+    transition: 0.3s;
+}
+
+.model__button:hover {
+    box-shadow: 0 0 0 10px var(--light);
+    font-weight: 1000;
+}
+
+.input__button {
+    height: 20px;
+    width: 110px;
     background-color: var(--light);
     border: none;
     color: var(--dark);
     font-size: 14px;
-    padding: 10px 19px;
     font-weight: 600;
     cursor: pointer;
 }

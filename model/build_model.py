@@ -1,5 +1,5 @@
 # neural network
-from layer import Dense, Tanh
+from layer import Dense, Tanh, Sigmoid
 from neuralnetwork import NeuralNetwork
 import numpy as np
 
@@ -28,13 +28,13 @@ y_test = y_test.reshape(y_test.shape[0], 10, 1)
 
 # neural network build
 net = NeuralNetwork([
-    Tanh(8 * 8, 16),
-    Tanh(16, 16),
-    Tanh(16, 10),
+    Sigmoid(8 * 8, 16),
+    Sigmoid(16, 16),
+    Sigmoid(16, 10),
 ])
 
 # train
-net.train(x_train, y_train, learning_rate=0.2, epochs = 700)
+net.train(x_train, y_train, learning_rate=0.2, epochs = 500)
 
 # test
 print('Accuracy in test set: ', net.get_accuracy(x_test, y_test))

@@ -16,18 +16,24 @@
         <header>
             <h1>Sieć neuronowa rozpoznająca cyfry</h1>
         </header>
+
+        <div id="choose__model">
+            <button id="sigmoid" class="model__button">sigmoid</button>
+            <button id="tanh" class="model__button">tanh</button>
+        </div>
+
         <div id="input">
             <canvas id="drawing"></canvas>
             <div id="input__buttons">
-                <button id="check" class="button">ROZPOZNAJ</button>
-                <button id="erase" class="button">WYCZYŚĆ</button>
+                <button id="check" class="input__button">ROZPOZNAJ</button>
+                <button id="erase" class="input__button">WYCZYŚĆ</button>
             </div>
         </div>
 
         <div id="neural">
             <canvas id="graph"></canvas>
         </div>
-        
+
         <div id="output">
             <canvas id="chart"></canvas>
         </div>
