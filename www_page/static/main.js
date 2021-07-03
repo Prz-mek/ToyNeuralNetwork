@@ -48,7 +48,7 @@ const prepareNet = async (model) => {
 };
 
 const init = async () => {
-    await prepareNet('model/tanh');
+    await prepareNet('model/sigmoid');
     canvDraw.width = 224;
     canvDraw.height = 224;
     setCanvNetDimensions();
@@ -61,8 +61,8 @@ window.addEventListener('resize', () => {
     paint();
 });
 
-document.getElementById('sigmoid').onclick = async () => prepareNet('model/sigmoid');
-document.getElementById('tanh').onclick = async () => prepareNet('model/tanh');
+document.getElementById('netModel1').onclick = async () => prepareNet('model/sigmoid');
+document.getElementById('netModel2').onclick = async () => prepareNet('model/tanh');
 
 canvDraw.addEventListener('mousedown', e => sheet.mouseDownPaint(e));
 canvDraw.addEventListener('mouseup', () => sheet.mouseUpPaint());

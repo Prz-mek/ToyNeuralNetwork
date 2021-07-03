@@ -62,6 +62,37 @@ header > h1 {
     grid-area: chose;
 }
 
+.radio {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    border: 1px solid var(--light);
+    border-radius: 15px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.25);
+}
+
+.radio__model {
+    display: none;
+}
+
+.radio__label {
+    padding: 8px 14px;
+    font-size: 14px;
+    color: var(--light);
+    background-color: var(--dark);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.radio__label:not(:last-of-type) {
+    border-right: 1px solid var(--light);
+}
+
+.radio__model:checked + .radio__label {
+    color: var(--dark);
+    background-color: var(--light);
+}
+
 #input, #output {
     display: flex;
     justify-content: center;
@@ -89,25 +120,7 @@ header > h1 {
     background-color: white;
 }
 
-.model__button {
-    width: 100px;
-    background-color: var(--light);
-    border-style: none;
-    border-radius: 20px;
-    color: var(--dark);
-    font-size: 14px;
-    padding: 10px 15px;
-    font-weight: 600;
-    cursor: pointer;
-    text-transform: uppercase;
-    margin: 30px;
-    transition: 0.3s;
-}
 
-.model__button:hover {
-    box-shadow: 0 0 0 10px var(--light);
-    font-weight: 1000;
-}
 
 .input__button {
     height: 20px;
