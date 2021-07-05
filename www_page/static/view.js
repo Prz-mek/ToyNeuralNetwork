@@ -23,16 +23,16 @@ const paintEdge = (ctx, x1, y1, x2, y2, activation) => {
 };
 
 class Sheet {
-    constructor(ctx, width, height, scale) {
+    constructor(ctx, width, height, modelSide) {
         this.drawing = false;
         this.ctx = ctx;
         this.width = width;
         this.height = height;
-        this.scale = scale;
+        this.modelSide = modelSide;
     }
 
-    setScale(scale) {
-        this.scale =  scale;
+    setModleSide(modelSide) {
+        this.modelSide =  modelSide;
     }
 
     draw(e) {
@@ -68,9 +68,9 @@ class Sheet {
             dataForNet.push(data[i]);
         }
 
-        let scale = this.scale;
         let sideBig = this.width();
-        let sideSmall = sideBig / scale;
+        let sideSmall = this.modelSide;
+        let scale = sideBig / sideSmall;
         let dataForNetScaled = [];
         for (let i = 0; i < sideSmall; i++) {
             for (let j = 0; j < sideSmall; j++) {
