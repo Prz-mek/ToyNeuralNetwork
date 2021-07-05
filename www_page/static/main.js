@@ -11,7 +11,7 @@ const getWidthNeural = () => document.getElementById('neural').offsetWidth;
 const getWidthOutput = () => 0.8 * document.getElementById('output').offsetWidth;
 const getHeight = () => document.getElementById('neural').offsetHeight;
 
-const sheet = new Sheet(ctxDraw, () => 224, () => 224, 28);
+const sheet = new Sheet(ctxDraw, () => 224, () => 224, 8);
 let net;
 const chart = new Chart(10, () => getWidthOutput(), () => 300);
 
@@ -41,14 +41,15 @@ const getModel = async (model) => {
     }
 };
 
-const prepareNet = async (model) => {
+const prepareNetAndSheet = async (model) => {
     const data = await getModel(model);
     let netModel = NeuralNetwork.encodeFromJSON(data);
+    sheet.setModleSide(Math.sqrt(netModel.getInputSize()));
     net = new NetworkView(netModel, getWidthNeural, getHeight, 0.05);
 };
 
 const init = async () => {
-    await prepareNet('model/sigmoid');
+    await prepareNetAndSheet('model/sigmoid8');
     canvDraw.width = 224;
     canvDraw.height = 224;
     setCanvNetDimensions();
@@ -61,8 +62,10 @@ window.addEventListener('resize', () => {
     paint();
 });
 
-document.getElementById('netModel1').onclick = async () => prepareNet('model/sigmoid');
-document.getElementById('netModel2').onclick = async () => prepareNet('model/tanh');
+document.getElementById('netModel1').onclick = async () => prepareNetAndSheet('model/sigmoid8');
+document.getElementById('netModel2').onclick = async () => prepareNetAndSheet('model/tanh8');
+document.getElementById('netModel3').onclick = async () => prepareNetAndSheet('model/sigmoid8');    // TO DO - change to new model
+document.getElementById('netModel4').onclick = async () => prepareNetAndSheet('model/tanh8');       // TO DO - change to new model
 
 canvDraw.addEventListener('mousedown', e => sheet.mouseDownPaint(e));
 canvDraw.addEventListener('mouseup', () => sheet.mouseUpPaint());

@@ -163,6 +163,10 @@ class NeuralNetwork {
         return new NeuralNetwork(activations, weights, biases);
     }
 
+    getInputSize() {
+        return this.layers[0].rows;
+    }
+
     predict(inputs) {
         if (inputs instanceof Matrix) {
             if (inputs.rows === this.layers[0].rows && inputs.cols === this.layers[0].cols) {
