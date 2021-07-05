@@ -78,6 +78,7 @@ header > h1 {
 .radio__label {
     padding: 8px 14px;
     font-size: 14px;
+    text-transform: uppercase;
     color: var(--light);
     background-color: var(--dark);
     cursor: pointer;
@@ -123,7 +124,7 @@ header > h1 {
 
 
 .input__button {
-    height: 20px;
+    height: 30px;
     width: 110px;
     background-color: var(--light);
     border: none;
