@@ -8,7 +8,7 @@ const paintPerceptron = (ctx, x, y, r, activation, m = 1) => {
 
     const color = activation * 255;
     ctx.beginPath();
-    ctx.arc(x, y, r - m, 0, Math.PI * 2, true);
+    ctx.arc(x, y, Math.max(r - m, 0), 0, Math.PI * 2, true);
     ctx.fillStyle = `rgb(${color}, ${color}, ${color})`;
     ctx.fill();
 };
@@ -22,6 +22,23 @@ const paintEdge = (ctx, x1, y1, x2, y2, activation) => {
     ctx.stroke();
 };
 
+const paintEllipsis = (ctx, x, y, d, r = 3) => {
+    ctx.beginPath();
+    ctx.arc(x, y - d, r, 0, Math.PI * 2, true);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2, true);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x, y + d, r, 0, Math.PI * 2, true);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+};
+
 class Sheet {
     constructor(ctx, width, height, modelSide) {
         this.drawing = false;
@@ -32,7 +49,7 @@ class Sheet {
     }
 
     setModleSide(modelSide) {
-        this.modelSide =  modelSide;
+        this.modelSide = modelSide;
     }
 
     draw(e) {
@@ -59,6 +76,7 @@ class Sheet {
         this.ctx.beginPath();
     }
 
+    // TO IMPROVE
     predict(net, ctxNet, ctxChart) {
         let drawing = this.ctx.getImageData(0, 0, canvDraw.width, canvDraw.height);
 
@@ -85,7 +103,7 @@ class Sheet {
             }
         }
 
-        let input = Matrix.fromValues(64, 1, normalize(...dataForNetScaled));
+        let input = Matrix.fromValues(net.model.getInputSize(), 1, normalize(...dataForNetScaled));
         let result = net.predict(ctxNet, input);
         chart.setPlot(percentage(...result.values))
         chart.paint(ctxChart);
@@ -107,21 +125,33 @@ class NetworkView {
         this.countPositions();
     }
 
+    // TO IMPROVE
     countPositions() {
         let margin = this.margin * Math.min(this.width(), this.height());
         let width = this.width() - 2 * margin;
         let height = this.height() - 2 * margin;
         let layersCount = this.activations.map(x => x.rows);
         let gapX = width / (layersCount.length - 1);
-        let gapY = height / Math.max(...layersCount);
+        let gapY = height / Math.min(Math.max(...layersCount), 64);
         this.r = Math.min(gapX, gapY, margin) / 2.5;
         let positions = [];
         for (let i = 0; i < layersCount.length; i++) {
             let x = margin + i * gapX;
             positions.push([x])
-            for (let j = 0; j < layersCount[i]; j++) {
-                let y = margin + height / 2 - (layersCount[i] - 1) / 2 * gapY + j * gapY;
-                positions[i].push(y);
+            if (layersCount[i] <= 64) {
+                for (let j = 0; j < layersCount[i]; j++) {
+                    let y = margin + height / 2 - (layersCount[i] - 1) / 2 * gapY + j * gapY;
+                    positions[i].push(y);
+                }
+            } else {
+                for (let j = 0; j < 30; j++) {
+                    let y = margin + height / 2 - 63 / 2 * gapY + j * gapY;
+                    positions[i].push(y);
+                }
+                for (let j = 30; j < 60; j++) {
+                    let y = margin + height / 2 - 63 / 2 * gapY + (j + 4) * gapY;
+                    positions[i].push(y);
+                }
             }
         }
         this.positions = positions;
@@ -133,6 +163,7 @@ class NetworkView {
         return output;
     }
 
+    // TO IMPROVE
     paint(ctx) {
         ctx.clearRect(0, 0, this.width(), this.height());
         for (let i = 1; i < this.positions.length; i++) {
@@ -141,23 +172,81 @@ class NetworkView {
             activatedWeights = activatedWeights.normalize();
             let x1 = this.positions[i - 1][0]
             let x2 = this.positions[i][0];
-            for (let j = 1; j < this.positions[i].length; j++) {
-                let y2 = this.positions[i][j];
-                for (let k = 1; k < this.positions[i - 1].length; k++) {
+
+            let positionsLengthJ = this.positions[i].length - 1;
+            let positionsLengthK = this.positions[i - 1].length - 1;
+            for (let j = -positionsLengthJ / 2; j < 0; j++) {
+                let y2 = this.positions[i][positionsLengthJ + j + 1];
+                for (let k = 1; k < positionsLengthK / 2 + positionsLengthK % 2 + 1; k++) {
                     let y1 = this.positions[i - 1][k];
-                    let activation = activatedWeights.get(j - 1, k - 1);
-                    if (0.4 < activation || activation < 0.7) {
+                    let activation = activatedWeights.get(activatedWeights.rows + j - 1, k - 1);
+                    if (0.4 < activation && activation < 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+
+                for (let k = -positionsLengthK / 2; k < 0; k++) {
+                    let y1 = this.positions[i - 1][positionsLengthK + k + 1];
+                    let activation = activatedWeights.get(activatedWeights.rows + j - 1, activatedWeights.cols + k);
+                    if (0.4 < activation && activation < 0.7) {
                         paintEdge(ctx, x1, y1, x2, y2, activation);
                     }
                 }
             }
 
-            for (let j = 1; j < this.positions[i].length; j++) {
+            for (let j = 1; j < positionsLengthJ / 2 + positionsLengthJ % 2 + 1; j++) {
                 let y2 = this.positions[i][j];
-                for (let k = 1; k < this.positions[i - 1].length; k++) {
+                for (let k = 1; k < positionsLengthK / 2 + positionsLengthK % 2 + 1; k++) {
                     let y1 = this.positions[i - 1][k];
                     let activation = activatedWeights.get(j - 1, k - 1);
-                    if (activation <= 0.4 || 0.7 <= activation) {
+                    if (0.4 < activation && activation < 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+
+                for (let k = -positionsLengthK / 2; k < 0; k++) {
+                    let y1 = this.positions[i - 1][positionsLengthK + k + 1];
+                    let activation = activatedWeights.get(j - 1, activatedWeights.cols + k);
+                    if (0.4 < activation && activation < 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+            }
+
+
+            for (let j = -positionsLengthJ / 2; j < 0; j++) {
+                let y2 = this.positions[i][positionsLengthJ + j + 1];
+                for (let k = 1; k < positionsLengthK / 2 + positionsLengthK % 2 + 1; k++) {
+                    let y1 = this.positions[i - 1][k];
+                    let activation = activatedWeights.get(activatedWeights.rows + j - 1, k - 1);
+                    if (0.4 >= activation || activation >= 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+
+                for (let k = -positionsLengthK / 2; k < 0; k++) {
+                    let y1 = this.positions[i - 1][positionsLengthK + k + 1];
+                    let activation = activatedWeights.get(activatedWeights.rows + j - 1, activatedWeights.cols + k);
+                    if (0.4 >= activation || activation >= 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+            }
+
+            for (let j = 1; j < positionsLengthJ / 2 + positionsLengthJ % 2 + 1; j++) {
+                let y2 = this.positions[i][j];
+                for (let k = 1; k < positionsLengthK / 2 + positionsLengthK % 2 + 1; k++) {
+                    let y1 = this.positions[i - 1][k];
+                    let activation = activatedWeights.get(j - 1, k - 1);
+                    if (0.4 >= activation || activation >= 0.7) {
+                        paintEdge(ctx, x1, y1, x2, y2, activation);
+                    }
+                }
+
+                for (let k = -positionsLengthK / 2; k < 0; k++) {
+                    let y1 = this.positions[i - 1][positionsLengthK + k + 1];
+                    let activation = activatedWeights.get(j - 1, activatedWeights.cols + k);
+                    if (0.4 >= activation || activation >= 0.7) {
                         paintEdge(ctx, x1, y1, x2, y2, activation);
                     }
                 }
@@ -167,9 +256,15 @@ class NetworkView {
         for (let i = 0; i < this.positions.length; i++) {
             let x = this.positions[i][0];
             let layerActivationNormalized = normalize(...this.model.layers[i].values);
-            for (let j = 1; j < this.positions[i].length; j++) {
+            let positionsLength = this.positions[i].length - 1;
+            for (let j = 1; j < positionsLength / 2 + positionsLength % 2 + 1; j++) {
                 let y = this.positions[i][j];
                 paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[j - 1]);
+            }
+
+            for (let j = -positionsLength / 2; j < 0; j++) {
+                let y = this.positions[i][positionsLength + j + 1];
+                paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[layerActivationNormalized.length + j]);
             }
         }
     }

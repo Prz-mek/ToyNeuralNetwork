@@ -62,10 +62,11 @@ window.addEventListener('resize', () => {
     paint();
 });
 
-document.getElementById('netModel1').onclick = async () => prepareNetAndSheet('model/sigmoid8');
-document.getElementById('netModel2').onclick = async () => prepareNetAndSheet('model/tanh8');
-document.getElementById('netModel3').onclick = async () => prepareNetAndSheet('model/sigmoid8');    // TO DO - change to new model
-document.getElementById('netModel4').onclick = async () => prepareNetAndSheet('model/tanh8');       // TO DO - change to new model
+// TO DO - redundancy
+document.getElementById('netModel1').onclick = async () => { await prepareNetAndSheet('model/sigmoid8'); net.paint(ctxNet); };
+document.getElementById('netModel2').onclick = async () => { await prepareNetAndSheet('model/tanh8'); net.paint(ctxNet); };
+document.getElementById('netModel3').onclick = async () => { await prepareNetAndSheet('model/sigmoid28'); net.paint(ctxNet); };
+document.getElementById('netModel4').onclick = async () => { await prepareNetAndSheet('model/tanh28'); net.paint(ctxNet); };
 
 canvDraw.addEventListener('mousedown', e => sheet.mouseDownPaint(e));
 canvDraw.addEventListener('mouseup', () => sheet.mouseUpPaint());
