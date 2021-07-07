@@ -163,7 +163,7 @@ class NetworkView {
         return output;
     }
 
-    // TO IMPROVE
+    // TO IMPROVE - SPAGHETTI
     paint(ctx) {
         ctx.clearRect(0, 0, this.width(), this.height());
         for (let i = 1; i < this.positions.length; i++) {
@@ -265,6 +265,11 @@ class NetworkView {
             for (let j = -positionsLength / 2; j < 0; j++) {
                 let y = this.positions[i][positionsLength + j + 1];
                 paintPerceptron(ctx, x, y, this.r, layerActivationNormalized[layerActivationNormalized.length + j]);
+            }
+
+            if(this.positions[i].length - 1 < this.activations[i].rows) {
+                console.log('...');
+                paintEllipsis(ctx, x, this.height() / 2, this.positions[i][2] - this.positions[i][1])
             }
         }
     }
