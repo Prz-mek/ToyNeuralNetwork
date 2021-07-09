@@ -7,6 +7,11 @@ def mse_derivative(y_true, y_pred):
     return 2 * (y_pred - y_true) / np.size(y_true)
 
 
+def union_shuffle(x, y):
+    assert len(x) == len(y)
+    p = np.random.permutation(len(x))
+    return x[p], y[p]
+
 class NeuralNetwork:
     def __init__(self, layers):
         self.layers = layers
@@ -20,8 +25,9 @@ class NeuralNetwork:
     def train(self, x_train, y_train, epochs=10, learning_rate=0.01):
         n = x_train.shape[0]
         for e in range(epochs):
+            x_train_prime, y_train_prime = union_shuffle(x_train, y_train)
             loss = 0
-            for x, y in zip(x_train, y_train):
+            for x, y in zip(x_train_prime, y_train_prime):
                 output = x
                 for layer in self.layers:
                     output = layer.forward(output)

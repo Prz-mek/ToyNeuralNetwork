@@ -82,7 +82,7 @@ net = NeuralNetwork([
 ])
 
 # train
-net.train(x_train, y_train, learning_rate=0.2, epochs = 100)
+net.train(x_train, y_train, learning_rate=0.05, epochs = 100)
 
 # test
 print('Accuracy in test set: ', net.get_accuracy(x_test, y_test))
@@ -98,7 +98,7 @@ net = NeuralNetwork([
 ])
 
 # train
-net.train(x_train, y_train, learning_rate=0.2, epochs = 100)
+net.train(x_train, y_train, learning_rate=0.05, epochs = 100)
 
 # test
 print('Accuracy in test set: ', net.get_accuracy(x_test, y_test))
