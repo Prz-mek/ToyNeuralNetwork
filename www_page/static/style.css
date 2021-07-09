@@ -131,6 +131,7 @@ header > h1 {
     color: var(--dark);
     font-size: 14px;
     font-weight: 600;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
