@@ -8,7 +8,7 @@
     <title>My Toy Neural Networks</title>
 
     <link rel="shortcut icon" href="#">
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
 <body>
@@ -23,10 +23,6 @@
                 <label class="radio__label" for="netModel1">sigmoid 8&times8</label>
                 <input class="radio__model" type="radio" value="model1" name="netModel" id="netModel2">
                 <label class="radio__label" for="netModel2">tanh 8&times8</label>
-                <input class="radio__model" type="radio" value="model1" name="netModel" id="netModel3">
-                <label class="radio__label" for="netModel3">sigmoid 28&times28</label>
-                <input class="radio__model" type="radio" value="model1" name="netModel" id="netModel4">
-                <label class="radio__label" for="netModel4">tanh 28&times28</label>
             </div>
         </div>
 
@@ -48,9 +44,8 @@
         <footer>My Toy Neural Network</footer>
     </div>
 
-    <script src="{{url_for('static', filename='model.js')}}"></script>
-    <script src="{{url_for('static', filename='view.js')}}"></script>
-    <script src="{{url_for('static', filename='main.js')}}"></script>
+    <script src="model.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>
